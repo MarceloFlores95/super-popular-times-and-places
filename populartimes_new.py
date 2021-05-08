@@ -9,13 +9,13 @@ import os
 import csv
 
 ### Dejar prendida variable single_coord para obtener los lugares cercanos de una ubicacion ###
-single_coord = False
+single_coord = True
 ### Dejar prendida la variable popular_times para obtener informacion sobre trafico de personas en el lugar durante el dia ###
 porpular_times = False
 
 ### Nombre del archivo y carpeta de salida ###
-file = "monterrey" # De preferencia el nombre del lugar
-carpeta = "Negocios" # Carpeta donde se guardaran todos los json obtenidos.
+file = "Hospital" # De preferencia el nombre del lugar
+carpeta = "Hospital" # Carpeta donde se guardaran todos los json obtenidos.
 
 ### Si no existe el nombre de la carpeta, se crea. ###
 if not os.path.exists(carpeta):
@@ -23,7 +23,7 @@ if not os.path.exists(carpeta):
 
 # Requiere
 radius = 2000 # Metros
-loc = (25.7435305555556, -100.4189) ### Latitud y longitud del lugar a examinar. ###
+loc = (-23.5590814, -46.6637382) ### Latitud y longitud del lugar a examinar. ###
 # Optional
 keyword = ''
 rankby = ''
@@ -41,7 +41,8 @@ rankby = ''
 '''
 
 ### Tipos de locales que se quieren buscar con el populartimes.py ### 
-types = ["bar", "church"]
+types = ["restaurant"]
+#types = ["store", "restaurant"]
 #types = ["accounting", "airport", "amusement_park" ,"aquarium", "art_gallery", "atm", "bakery" ,"bank" ,"bar" ,"beauty_salon" ,"bicycle_store" ,"book_store" ,"bowling_alley" ,"bus_station" ,"cafe" ,"campground" ,"car_dealer" ,"car_rental" ,"car_repair" ,"car_wash" ,"casino" ,"cemetery" ,"church" ,"city_hall" ,"clothing_store" ,"convenience_store" ,"courthouse" ,"dentist" ,"department_store" ,"doctor" ,"drugstore" ,"electrician" ,"electronics_store" ,"embassy" ,"fire_station" ,"florist" ,"funeral_home" ,"furniture_store" ,"gas_station" ,"grocery_or_supermarket" ,"gym" ,"hair_care" ,"hardware_store" ,"hindu_temple" ,"home_goods_store" ,"hospital" ,"insurance_agency" ,"jewelry_store","laundry" ,"lawyer" ,"library" ,"light_rail_station" ,"liquor_store" ,"local_government_office" ,"locksmith" ,"lodging" ,"meal_delivery" ,"meal_takeaway" ,"mosque" ,"movie_rental" ,"movie_theater" ,"moving_company" ,"museum" ,"night_club" ,"painter" ,"park" ,"parking" ,"pet_store" ,"pharmacy" ,"physiotherapist" ,"plumber" ,"pólice" ,"post_office" ,"primary_school" ,"real_estate_agency" ,"restaurant" ,"roofing_contractor" ,"rv_park" ,"school" ,"secondary_school" ,"shoe_store" ,"shopping_mall" ,"spa" ,"stadium" ,"storage" ,"store" ,"subway_station" ,"supermarket" ,"synagogue" ,"taxi_stand" ,"tourist_attraction" ,"train_station" ,"transit_station" ,"travel_agency" ,"university" ,"veterinary_care" ,"zoo"] # Todos los negocios
 
 s = pd.DataFrame() # Inicializar el dataframe
@@ -49,7 +50,7 @@ i = 0 # Manejo de la primera fila
 
 ### APIKEY para correr el script. "REQUERIDO"
 # APIKEY Datlas
-APIKEY = ''
+APIKEY = ""
 
 
 def findPlaces(loc=loc, radius=radius, pagetoken = None, file="data", type="", rankby="", keyword=""):
@@ -88,11 +89,13 @@ pagetoken = None
 ### Si single_coord esta prendido se hace una llamada al api de google places y trae info del lugar ###
 if (single_coord):
     for t in types:
-        pagetoken = findPlaces(loc=loc, radius=radius, pagetoken=pagetoken, file=file, type=t, rankby=rankby, keyword=keyword)
-        time.sleep(2)
 
-        if not pagetoken:
-            pass
+        while True:
+            pagetoken = findPlaces(loc=loc, radius=radius, pagetoken=pagetoken, file=file, type=t, rankby=rankby, keyword=keyword)
+            time.sleep(2)
+
+            if not pagetoken:
+                break
     
 ### OBTIENE LOS POPULARTIMES DEL ID SELECCIONADO ###
 ### Debido a los archivos creados con el single_cood, solo necesitamos leer el ultimo archivo, ya que tiene todos los datos ###
